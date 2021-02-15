@@ -1,6 +1,6 @@
 $(function() {
-  const FADE_TIME = 150; // ms
-  const TYPING_TIMER_LENGTH = 400; // ms
+  const FADE_TIME = 50; // ms
+  const TYPING_TIMER_LENGTH = 5; // ms
   const COLORS = [
     '#e21400', '#91580f', '#f8a700', '#f78b00',
     '#58dc00', '#287b00', '#a8f07a', '#4ae8c4',
@@ -12,9 +12,14 @@ $(function() {
   const $usernameInput = $('.usernameInput'); // Input for username
   const $messages = $('.messages');           // Messages area
   const $inputMessage = $('.inputMessage');   // Input message input box
+  const $setupTime = $('.setupTime');         // Timer setup input box
+  const $timerButton = $('.timerButton');     // Timer button
+  const $time = $('.time');                   // Time
 
   const $loginPage = $('.login.page');        // The login page
   const $chatPage = $('.chat.page');          // The chatroom page
+  const $setupPage = $('.setup.page');        // The timer setup page
+  const $timerPage = $('.timer.page');        // The timer page
 
   const socket = io();
 
@@ -24,6 +29,8 @@ $(function() {
   let typing = false;
   let lastTypingTime;
   let $currentInput = $usernameInput.focus();
+  let settingupTimer = false;
+  let timeinterval;
 
   const addParticipantsMessage = (data) => {
     let message = '';
@@ -193,7 +200,10 @@ $(function() {
     }
     // When the client hits ENTER on their keyboard
     if (event.which === 13) {
-      if (username) {
+      if(settingupTimer) {
+        setTimer();
+      }
+      else if (username) {
         sendMessage();
         socket.emit('stop typing');
         typing = false;
@@ -218,6 +228,93 @@ $(function() {
   $inputMessage.click(() => {
     $inputMessage.focus();
   });
+
+  // Focus input when clicking on the timer setup input's border
+  $setupPage.click(() => {
+    $setupTime.focus();
+  });
+
+
+  $timerButton.on("click", () => {
+    showTimerSetupPage();
+  });
+
+  $timerPage.click(() => {
+    stopTimerForEveryone();
+  });
+
+  // Timer setup
+
+  const showTimerSetupPage = () => {
+    $chatPage.fadeOut();
+    $setupPage.show();
+    
+    settingupTimer = true;
+  };
+
+  const setTimer = () => {
+    let time = $setupTime.val();
+    startTimerForEveryone(time);
+    settingupTimer = false;
+  };
+
+  // Timer 
+  function getTimeRemaining(endtime){
+    const total = endtime;
+    const seconds = Math.floor((total/1000) % 60 );
+    const minutes = Math.floor((total/1000/60) % 60 );
+    const hours = Math.floor((total/(1000*60*60)) % 24 );
+
+    return {
+      total,
+      hours,
+      minutes,
+      seconds
+    };
+  }
+
+  const showTimerPageAndCountdown = (time) => {
+    $chatPage.fadeOut();
+    $setupPage.fadeOut();
+    $time.html("");
+    $timerPage.show();
+
+    // Convert from min to ms
+    let endtime = time*60.*1000.;
+    timeinterval = setInterval(() => {
+      const t = getTimeRemaining(endtime);
+      endtime -= 1000;
+      $time.html(("0" + t.hours).slice(-2)   + ":" + 
+                ("0" + t.minutes).slice(-2) + ":" + 
+                ("0" + t.seconds).slice(-2));
+      if (t.total <= 0) {
+        clearInterval(timeinterval);
+        stopTimerForEveryone();
+      }
+    },1000);
+  };
+
+  const fadeOutTimerPage = () => {
+    clearInterval(timeinterval);
+    $chatPage.show();
+    $setupPage.fadeOut();
+    $timerPage.fadeOut();
+  };
+
+  const startTimerForEveryone = (time) => {
+    settingupTimer = false;
+    socket.emit('start timer', time);
+    let plural = time <= 1 ? "" : "s";
+    console.log(`SELF has started the timer for ${time} minute${plural}.`);
+    showTimerPageAndCountdown(time);
+  };
+
+  const stopTimerForEveryone = () => { 
+    settingupTimer = false;
+    socket.emit('stop timer');
+    console.log('triggering timer stop');
+    fadeOutTimerPage();
+  };
 
   // Socket events
 
@@ -258,6 +355,21 @@ $(function() {
   // Whenever the server emits 'stop typing', kill the typing message
   socket.on('stop typing', (data) => {
     removeChatTyping(data);
+  });
+
+  // Whenever the server emits 'start timer', start the timer
+  socket.on('start timer', (data) => {
+    let plural = data.time <= 1. ? "" : "s";
+    console.log(`${data.username} has started the timer for ${data.time} minute${plural}.`);
+
+    console.log('triggering timer start');
+    showTimerPageAndCountdown(data.time);
+  });
+
+  // Whenever the server emits 'stop timer', start the timer
+  socket.on('stop timer', (data) => {
+    console.log(`${data.username} has stopped the timer.`);
+    fadeOutTimerPage();
   });
 
   socket.on('disconnect', () => {

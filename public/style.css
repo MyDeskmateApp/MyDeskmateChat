@@ -86,6 +86,87 @@ ul {
   font-weight: 100;
 }
 
+/* Setup Page */
+
+.setup.page {
+  display:none;
+  background-color: #000;
+}
+
+.setup.page .setupArea {
+  height: 100px;
+  margin-top: -100px;
+  position: absolute;
+
+  text-align: center;
+  top: 50%;
+  width: 100%;
+}
+
+.setup.page .setupArea .setupTime {
+  background-color: transparent;
+  border: none;
+  border-bottom: 2px solid #fff;
+  outline: none;
+  padding-bottom: 15px;
+  text-align: center;
+  width: 400px;
+}
+
+.setup.page .setupTitle {
+  font-size: 200%;
+}
+
+.setup.page .setupTime {
+  font-size: 200%;
+  letter-spacing: 3px;
+}
+
+.setup.page .setupTitle, .setup.page .setupTime {
+  color: #fff;
+  font-weight: 100;
+}
+
+/* Timer Page */
+
+.timer.page {
+  display: none;
+  background-color: #000;
+}
+
+.timer.page .timerArea {
+  height: 100px;
+  margin-top: -100px;
+  position: absolute;
+
+  text-align: center;
+  top: 50%;
+  width: 100%;
+}
+
+.timer.page .timerArea .time {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  padding-bottom: 15px;
+  text-align: center;
+  width: 100%;
+}
+
+.timer.page .timerTitle  {
+  font-size: 200%;
+}
+
+.login.page .time {
+  font-size: 200%;
+  letter-spacing: 3px;
+}
+
+.timer.page .timerTitle, .timer.page .time {
+  color: #fff;
+  font-weight: 100;
+}
+
 /* Chat page */
 
 .chat.page {
