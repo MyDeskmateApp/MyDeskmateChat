@@ -1,6 +1,6 @@
 $(function() {
-  const FADE_TIME = 50; // ms
-  const TYPING_TIMER_LENGTH = 5; // ms
+  const FADE_TIME = 150; // ms
+  const TYPING_TIMER_LENGTH = 150; // ms
   const COLORS = [
     '#e21400', '#91580f', '#f8a700', '#f78b00',
     '#58dc00', '#287b00', '#a8f07a', '#4ae8c4',
@@ -85,7 +85,10 @@ $(function() {
     // Don't fade the message in if there is an 'X was typing'
     const $typingMessages = getTypingMessages(data);
     if ($typingMessages.length !== 0) {
-      options.fade = false;
+      if(options && typeof options.fade !== 'undefined') {
+        options.fade = false;
+      }
+      
       $typingMessages.remove();
     }
 
@@ -100,6 +103,7 @@ $(function() {
       .data('username', data.username)
       .addClass(typingClass)                      // Queried by getTypingMessages()
       .append($usernameDiv, $messageBodyDiv);
+
 
     addMessageElement($messageDiv, options);
   }

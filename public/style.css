@@ -73,11 +73,11 @@ ul {
 }
 
 .login.page .title {
-  font-size: 200%;
+  font-size: 400%;
 }
 
 .login.page .usernameInput {
-  font-size: 200%;
+  font-size: 400%;
   letter-spacing: 3px;
 }
 
@@ -114,11 +114,11 @@ ul {
 }
 
 .setup.page .setupTitle {
-  font-size: 200%;
+  font-size: 400%;
 }
 
 .setup.page .setupTime {
-  font-size: 200%;
+  font-size: 400%;
   letter-spacing: 3px;
 }
 
@@ -154,11 +154,11 @@ ul {
 }
 
 .timer.page .timerTitle  {
-  font-size: 200%;
+  font-size: 400%;
 }
 
 .login.page .time {
-  font-size: 200%;
+  font-size: 400%;
   letter-spacing: 3px;
 }
 
@@ -176,11 +176,11 @@ ul {
 /* Font */
 
 .messages {
-  font-size: 150%;
+  font-size: 300%;
 }
 
 .inputMessage {
-  font-size: 100%;
+  font-size: 300%;
 }
 
 .log {
@@ -214,29 +214,16 @@ ul {
   padding-right: 15px;
   text-align: right;
 }
-/* Upload */
-
-.uploadfile {
-  border: 10px solid #000;
-  bottom: 60px;
-  height: 60px;
-  left: 0;
-  outline: none;
-  padding-left: 10px;
-  position: absolute;
-  right: 0;
-  width: 100%;
-}
 
 /* Input */
 
 .inputMessage {
-  border: 10px solid #000;
+  border: 15px solid #000;
   bottom: 0;
-  height: 60px;
+  height: 100px;
   left: 0;
   outline: none;
-  padding-left: 10px;
+  padding-left: 20px;
   position: absolute;
   right: 0;
   width: 100%;
