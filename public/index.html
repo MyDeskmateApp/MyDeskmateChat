@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <script type="text/javascript" src="./dist/browser-image-compression.js"
+    defer="defer"></script>
   <title>Socket.IO Chat Example</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -12,6 +14,17 @@
       <div class="chatArea">
         <ul class="messages"></ul>
       </div>
+
+      <!-- Upload file -->
+      <div style="display: flex;">
+      <label for="uploadfile"><span style="color: white;">Filetypes: mp4, mkv, ogg, mp3, wav, aac, all image format
+          including gifs</span>
+
+        <input type="file" id="uploadfile" />
+      </label>
+      <span id="progress">uploading: <span id="percentage"></span> %</span>
+    </div>
+
       <input class="inputMessage" placeholder="Type here..."/>
     </li>
     <li class="login page">
@@ -34,6 +47,41 @@
     </li>
   </ul>
 
+  <!-- The Modal -->
+  <div id="myModal" class="modal">
+
+    <!-- The Close Button -->
+    <span class="close">&times;</span>
+
+    <!-- Modal Content (The Image) -->
+    <img class="modal-content" id="img-content">
+
+    <!-- Modal Caption (Image Text) -->
+    <div id="caption"></div>
+  </div>
+
+</body>
+  <script>
+  var modal = document.getElementById("myModal");
+
+  // Get the image and insert it inside the modal - use its "alt" text as a caption
+  function showing(data) {
+    var img = data;
+    var modalImg = document.getElementById("img-content");
+    img.onclick = function () {
+      modal.style.display = "block";
+      modalImg.src = this.src;
+    }
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function () {
+      modal.style.display = "none";
+    }
+  }
+  </script>
   <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
   <script src="/socket.io/socket.io.js"></script>
   <script src="/main.js"></script>

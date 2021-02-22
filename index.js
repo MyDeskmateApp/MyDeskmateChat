@@ -5,6 +5,7 @@ const path = require('path');
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 const port = process.env.PORT || 3000;
+const fs = require('fs');
 
 server.listen(port, () => {
   console.log('Server listening at port %d', port);
@@ -88,5 +89,19 @@ io.on('connection', (socket) => {
         numUsers: numUsers
       });
     }
+  });
+
+  //serving files
+  socket.on('base64 file', function (msg) {
+    console.log('received base64 file from' + socket.username);
+    io.sockets.emit('base64 file',  //include sender
+
+      {
+        username: socket.username,
+        file: msg.file,
+        fileName: msg.fileName
+      }
+
+    );
   });
 });

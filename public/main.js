@@ -72,13 +72,15 @@ $(function() {
     }
   }
 
-  // Log a message
+  // Log a message on the chat window
   const log = (message, options) => {
     const $el = $('<li>').addClass('log').text(message);
     addMessageElement($el, options);
   }
 
   // Adds the visual chat message to the message list
+  // data object must contain: username, message
+  // data object might otherwise contain: typing
   const addChatMessage = (data, options) => {
     // Don't fade the message in if there is an 'X was typing'
     const $typingMessages = getTypingMessages(data);
@@ -93,11 +95,35 @@ $(function() {
     const $messageBodyDiv = $('<span class="messageBody">')
       .text(data.message);
 
-    const typingClass = data.typing ? 'typing' : '';
+    const typingClass = data.typing ? 'typing' : ''; // Whether it is a 'is typing' visual
     const $messageDiv = $('<li class="message"/>')
       .data('username', data.username)
-      .addClass(typingClass)
+      .addClass(typingClass)                      // Queried by getTypingMessages()
       .append($usernameDiv, $messageBodyDiv);
+
+    addMessageElement($messageDiv, options);
+  }
+
+  // Adds the visual chat message to the message list
+  // data object must contain: username, file
+  const addImgMessage = (data, options) => {
+    const $usernameDiv = $('<span class="username"/>')
+      .text(data.username)
+      .css('color', getUsernameColor(data.username));
+    const $messageBodyDiv = $('<span class="messageBody">')
+      .text(data.message);
+    let $messageDiv = $('<li class="message"/>')
+      .data('username', data.username)
+      .append($usernameDiv, $messageBodyDiv);
+    
+    let filetype = data.fileName.split('.').pop();
+    if (filetype == 'mp4' || filetype == 'ogg' || filetype == 'mkv') {
+      $messageDiv.html(`<video class="imgupload" src="${data.file}" height="400" width="400" controls/>`);
+    } else if (filetype == 'mp3' || filetype == 'wav' || filetype == 'aac') {
+      $messageDiv.html(`<audio class="imgupload" src="${data.file}" height="400" width="400" controls/>`);
+    } else {
+      $messageDiv.html(`<img class="imgupload" src="${data.file}" height="200" width="200" onclick="showing(this)"/>`);
+    }
 
     addMessageElement($messageDiv, options);
   }
@@ -387,4 +413,63 @@ $(function() {
     log('attempt to reconnect has failed');
   });
 
+  socket.on('base64 file', (data) => {
+    //hide progress msg when data received
+    $('#progress').hide();
+    //appending data according to data types
+    addImgMessage(data);
+  })
+
+  // Helper
+
+  $('#uploadfile').bind('change', async function (event) {
+  
+    const imageFile = event.target.files[0];
+    console.log('originalFile instanceof Blob', imageFile instanceof Blob); // true
+    console.log(`originalFile size ${imageFile.size / 1024 / 1024} MB`);
+
+    const options = {
+      maxSizeMB: 0.2,
+      maxWidthOrHeight: 600,
+      useWebWorker: true
+    }
+    try {
+      const compressedFile = await imageCompression(imageFile, options);
+      console.log('compressedFile instance of Blob', compressedFile instanceof Blob); // true
+      console.log(`compressedFile size ${compressedFile.size / 1024 / 1024} MB`); // smaller than maxSizeMB
+
+      await readThenSendFile(compressedFile); //readin the compressed file
+    } catch (error) {
+      console.log(error);
+      await readThenSendFile(imageFile); // if filetype is not image then sent orignal data without compression
+    }
+
+  });
+
+  function readThenSendFile(data) {
+
+    //show progress msg
+    $('#progress').fadeIn(100);
+
+    var reader = new FileReader();
+    reader.onload = function (evt) {
+      var msg = {};
+      msg.username = username;
+      msg.file = evt.target.result;
+      msg.fileName = data.name;
+      socket.emit('base64 file', msg);
+    };
+    reader.readAsDataURL(data);
+
+    reader.onprogress = function (currentFile) {
+      if (currentFile.lengthComputable) {
+        var progress = parseInt(((currentFile.loaded / currentFile.total) * 100), 10);
+        $('#percentage').html(progress);
+        console.log(progress);
+      }
+    }
+    reader.onerror = function () {
+      alert("Could not read the file: large file size");
+    };
+  }
 });

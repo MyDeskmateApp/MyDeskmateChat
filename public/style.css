@@ -214,6 +214,19 @@ ul {
   padding-right: 15px;
   text-align: right;
 }
+/* Upload */
+
+.uploadfile {
+  border: 10px solid #000;
+  bottom: 60px;
+  height: 60px;
+  left: 0;
+  outline: none;
+  padding-left: 10px;
+  position: absolute;
+  right: 0;
+  width: 100%;
+}
 
 /* Input */
 
@@ -228,3 +241,5 @@ ul {
   right: 0;
   width: 100%;
 }
+
+/* Modal */
