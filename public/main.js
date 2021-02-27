@@ -31,6 +31,8 @@ $(function() {
   let $currentInput = $usernameInput.focus();
   let settingupTimer = false;
   let timeinterval;
+  let startBreakTime = 0;
+  let breakTime = 0.1;
 
   const addParticipantsMessage = (data) => {
     let message = '';
@@ -329,6 +331,35 @@ $(function() {
     $chatPage.show();
     $setupPage.fadeOut();
     $timerPage.fadeOut();
+    // flag for break time
+    startBreakTime += 1;
+    startBreakTimeForEveryone();
+  };
+
+  // start break time for everyone
+  const startBreakTimeForEveryone = () => {
+    if (startBreakTime == 1) {
+        console.log("startBreakTimeForEveryone" + startBreakTime);
+        socket.emit('start break timer', breakTime);
+    }
+  }
+
+  // break time countdown
+  const breakTimeCountdown = (time) => {
+    console.log("break time countdown" + time);
+    // Convert from min to ms
+    let endtime = time*60.*1000.;
+    timeinterval = setInterval(() => {
+      const t = getTimeRemaining(endtime);
+      endtime -= 1000;
+      $time.html(("0" + t.hours).slice(-2)   + ":" + 
+                ("0" + t.minutes).slice(-2) + ":" + 
+                ("0" + t.seconds).slice(-2));
+      if (t.total <= 0) {
+        clearInterval(timeinterval);
+        stopBreakForEveryone();
+      }
+    },1000);
   };
 
   const startTimerForEveryone = (time) => {
@@ -344,6 +375,11 @@ $(function() {
     socket.emit('stop timer');
     console.log('triggering timer stop');
     fadeOutTimerPage();
+  };
+
+  const stopBreakForEveryone = () => { 
+    console.log('triggering break time stop');
+    socket.emit('stop break timer');
   };
 
   // Socket events
@@ -396,10 +432,21 @@ $(function() {
     showTimerPageAndCountdown(data.time);
   });
 
+  // Whenever the server emits 'start break timer', start the timer
+  socket.on('start break timer', (data) => {
+    console.log('triggering break timer start');
+    breakTimeCountdown(data.time);
+  });
+
   // Whenever the server emits 'stop timer', start the timer
   socket.on('stop timer', (data) => {
     console.log(`${data.username} has stopped the timer.`);
     fadeOutTimerPage();
+  });
+
+  socket.on('stop break timer', (data) => {
+    console.log(`${data.username} has stopped the timer.`);
+    startTimerForEveryone(40);
   });
 
   socket.on('disconnect', () => {

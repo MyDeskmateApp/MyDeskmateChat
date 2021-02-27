@@ -65,6 +65,7 @@ io.on('connection', (socket) => {
 
   // when the client emits 'start timer', we broadcast it to others
   socket.on('start timer', (time) => {
+    console.log('received start timer' + time);
     socket.broadcast.emit('start timer', /* data */{
       username: socket.username,
       time: time // min
@@ -74,6 +75,23 @@ io.on('connection', (socket) => {
   // when the client emits 'stop timer', we broadcast it to others
   socket.on('stop timer', () => {
     socket.broadcast.emit('stop timer', {
+      username: socket.username
+    });
+  });
+
+  // when the client emits 'start break timer', we broadcast it to others
+  socket.on('start break timer', (time) => {
+    console.log('received start break timer' + time);
+    socket.broadcast.emit('start break timer', /* data */{
+      username: socket.username,
+      time: time // min
+    });
+  });
+
+  // when the client emits 'stop break timer', we broadcast it to others
+  socket.on('stop break timer', () => {
+    console.log('break time stop');
+    socket.broadcast.emit('stop break timer', {
       username: socket.username
     });
   });
