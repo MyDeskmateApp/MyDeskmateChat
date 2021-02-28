@@ -12,7 +12,7 @@ $(function() {
   const $usernameInput = $('.usernameInput'); // Input for username
   const $messages = $('.messages');           // Messages area
   const $inputMessage = $('.inputMessage');   // Input message input box
-  const $setupTime = $('.setupTime');         // Timer setup input box
+  // const $setupTime = $('.setupTime');         // Timer setup input box
   const $timerButton = $('.timerButton');     // Timer button
   const $time = $('.time');                   // Time
 
@@ -32,7 +32,11 @@ $(function() {
   let settingupTimer = false;
   let timeinterval;
   let startBreakTime = 0;
-  let breakTime = 0.1;
+
+  // Default for study session
+  let studyTime = 40;
+  // Default for break session
+  let breakTime = 10;
 
   const addParticipantsMessage = (data) => {
     let message = '';
@@ -54,6 +58,13 @@ $(function() {
       $chatPage.show();
       $loginPage.off('click');
       $currentInput = $inputMessage.focus();
+
+      if(username.startsWith('dev')) {
+        let customTime = Number(username.substring(3));
+        studyTime = customTime;
+        breakTime = customTime;
+        console.log(`set custom time ${customTime}`);
+      }
 
       // Tell the server your username
       socket.emit('add user', username);
@@ -262,9 +273,9 @@ $(function() {
   });
 
   // Focus input when clicking on the timer setup input's border
-  $setupPage.click(() => {
-    $setupTime.focus();
-  });
+  // $setupPage.click(() => {
+  //   $setupTime.focus();
+  // });
 
 
   $timerButton.on("click", () => {
@@ -285,8 +296,8 @@ $(function() {
   };
 
   const setTimer = () => {
-    let time = $setupTime.val();
-    startTimerForEveryone(time);
+    // let time = $setupTime.val();
+    startTimerForEveryone(studyTime);
     settingupTimer = false;
   };
 
@@ -390,7 +401,7 @@ $(function() {
   socket.on('login', (data) => {
     connected = true;
     // Display the welcome message
-    const message = 'Welcome to Socket.IO Chat – ';
+    const message = 'Welcome to MyDeskmate – ';
     log(message, {
       prepend: true
     });
@@ -448,7 +459,7 @@ $(function() {
 
   socket.on('stop break timer', (data) => {
     console.log(`${data.username} has stopped the timer.`);
-    startTimerForEveryone(40);
+    startTimerForEveryone(studyTime);
   });
 
   socket.on('disconnect', () => {
