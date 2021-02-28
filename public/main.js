@@ -31,9 +31,13 @@ $(function() {
   let typing = false;
   let lastTypingTime;
   let $currentInput = $usernameInput.focus();
-  let settingupTimer = false;
+
   let timeinterval;
   let startBreakTime = 0;
+
+  let numberOfUsers;
+  let numberOfReadyUsers = 0;
+  let isUserReady = false;  // Whether the currect user is ready
 
   // Default for study session
   let studyTime = 40;
@@ -42,6 +46,7 @@ $(function() {
 
   const addParticipantsMessage = (data) => {
     let message = '';
+    numberOfUsers = data.numUsers; // Update number of users
     if (data.numUsers === 1) {
       message += `there's 1 participant`;
     } else {
@@ -245,10 +250,7 @@ $(function() {
     }
     // When the client hits ENTER on their keyboard
     if (event.which === 13) {
-      if(settingupTimer) {
-        setTimer();
-      }
-      else if (username) {
+      if (username) {
         sendMessage();
         socket.emit('stop typing');
         typing = false;
@@ -295,8 +297,15 @@ $(function() {
   // Timer setup
 
   const userReady = () => {
-    console.log('user ready');
-    socket.emit('user ready');
+    if(!isUserReady) {
+      isUserReady = true;
+      numberOfReadyUsers++;
+      console.log(`${numberOfReadyUsers} out of ${numberOfUsers} users are ready.`);
+      if(numberOfReadyUsers === numberOfUsers) {
+        startTimerForEveryone(studyTime);
+      }
+      socket.emit('user ready');
+    }
   };
 
   const showTimerSetupPage = () => {
@@ -304,12 +313,6 @@ $(function() {
     $setupPage.show();
     
     settingupTimer = true;
-  };
-
-  const setTimer = () => {
-    // let time = $setupTime.val();
-    startTimerForEveryone(studyTime);
-    settingupTimer = false;
   };
 
   // Timer 
@@ -432,6 +435,7 @@ $(function() {
 
   // Whenever the server emits 'user left', log it in the chat body
   socket.on('user left', (data) => {
+    numberOfUsers--;
     log(`${data.username} left`);
     addParticipantsMessage(data);
     removeChatTyping(data);
@@ -449,7 +453,9 @@ $(function() {
 
   // Whenever the server emits 'user ready', prompt this user to get ready
   socket.on('user ready', (data) => {
+    numberOfReadyUsers++;
     console.log(`${data.username} is ready.`);
+    console.log(`${numberOfReadyUsers} out of ${numberOfUsers} users are ready.`);
   });
 
   // Whenever the server emits 'start timer', start the timer
