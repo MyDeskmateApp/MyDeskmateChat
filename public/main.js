@@ -347,6 +347,8 @@ $(function() {
   // break time countdown
   const breakTimeCountdown = (time) => {
     console.log("break time countdown" + time);
+    $time.html("");
+    $breaktimePage.show();
     // Convert from min to ms
     let endtime = time*60.*1000.;
     timeinterval = setInterval(() => {
