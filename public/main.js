@@ -15,6 +15,8 @@ $(function() {
   // const $setupTime = $('.setupTime');         // Timer setup input box
   const $timerButton = $('.timerButton');     // Timer button
   const $time = $('.time');                   // Time
+  const $setupTitle = $('.setupTitle');
+  const $readyButton = $('.setupTime');
 
   const $loginPage = $('.login.page');        // The login page
   const $chatPage = $('.chat.page');          // The chatroom page
@@ -286,7 +288,16 @@ $(function() {
     stopTimerForEveryone();
   });
 
+  $readyButton.click(() => {
+    userReady();
+  });
+
   // Timer setup
+
+  const userReady = () => {
+    console.log('user ready');
+    socket.emit('user ready');
+  };
 
   const showTimerSetupPage = () => {
     $chatPage.fadeOut();
@@ -434,6 +445,11 @@ $(function() {
   // Whenever the server emits 'stop typing', kill the typing message
   socket.on('stop typing', (data) => {
     removeChatTyping(data);
+  });
+
+  // Whenever the server emits 'user ready', prompt this user to get ready
+  socket.on('user ready', (data) => {
+    console.log(`${data.username} is ready.`);
   });
 
   // Whenever the server emits 'start timer', start the timer
