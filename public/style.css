@@ -99,21 +99,36 @@ ul {
   position: absolute;
 
   text-align: center;
-  top: 50%;
+  top: 35%;
   width: 100%;
 }
 
 .setup.page .setupArea .setupTime {
   background-color: transparent;
   border: none;
+  border-bottom: 2px solid #fff;
+  border-top: 2px solid #fff;
+  border-left: 2px solid #fff;
+  border-right: 2px solid #fff;
+
   outline: none;
+  padding-top: 15px;
   padding-bottom: 15px;
   text-align: center;
-  width: 100%;
+  width: 50%;
+  margin: auto;
+}
+
+.setup.page > .setupArea > .setupTime:active,.setup.page > .setupArea > .setupTime:hover {
+  background-color: grey;
 }
 
 .setup.page .setupTitle  {
   font-size: 400%;
+}
+
+.setup.page .setupProgression  {
+  font-size: 300%;
 }
 
 .setup.page .setupTime {
@@ -121,7 +136,7 @@ ul {
   letter-spacing: 3px;
 }
 
-.setup.page .setupTitle, .setup.page .setupTime {
+.setup.page .setupTitle, .setup.page .setupTime, .setup.page .setupProgression {
   color: #fff;
   font-weight: 100;
 }
