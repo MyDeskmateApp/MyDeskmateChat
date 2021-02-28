@@ -89,7 +89,7 @@ ul {
 /* Setup Page */
 
 .setup.page {
-  display:none;
+  display: none;
   background-color: #000;
 }
 
@@ -106,14 +106,13 @@ ul {
 .setup.page .setupArea .setupTime {
   background-color: transparent;
   border: none;
-  border-bottom: 2px solid #fff;
   outline: none;
   padding-bottom: 15px;
   text-align: center;
-  width: 400px;
+  width: 100%;
 }
 
-.setup.page .setupTitle {
+.setup.page .setupTitle  {
   font-size: 400%;
 }
 
@@ -157,7 +156,7 @@ ul {
   font-size: 400%;
 }
 
-.login.page .time {
+.timer.page .time {
   font-size: 400%;
   letter-spacing: 3px;
 }
