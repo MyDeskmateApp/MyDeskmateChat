@@ -321,6 +321,7 @@ $(function() {
     $setupPage.fadeOut();
     $time.html("");
     $timerPage.show();
+    clearInterval(timeinterval);
 
     // Convert from min to ms
     let endtime = time*60.*1000.;
@@ -357,6 +358,7 @@ $(function() {
 
   // break time countdown
   const breakTimeCountdown = (time) => {
+    clearInterval(timeinterval);
     console.log("break time countdown" + time);
     // Convert from min to ms
     let endtime = time*60.*1000.;
