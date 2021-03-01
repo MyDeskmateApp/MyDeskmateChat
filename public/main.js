@@ -38,7 +38,7 @@ $(function() {
   let numberOfUsers;
   let numberOfReadyUsers = 0;
   let isUserReady = false;  // Whether the currect user is ready
-  let enableTimerButton = true;
+  let enableTimerButtonFlag = true;
 
   let isTimerPageOn = false;
 
@@ -297,7 +297,7 @@ $(function() {
   });
 
   $timerButton.on("click", () => {
-      if (enableTimerButton == true) {
+      if (enableTimerButtonFlag == true) {
         showTimerSetupPage();
       }
   });
@@ -411,7 +411,7 @@ $(function() {
   const breakTimeCountdown = (time) => {
     clearInterval(timeinterval);
     console.log("break time countdown" + time);
-    enableTimerButton = false;
+    enableTimerButtonFlag = false;
 
     // Convert from min to ms
     let endtime = time*60.*1000.;
@@ -425,12 +425,16 @@ $(function() {
       if (t.total <= 0) {
         $time.html("");
         clearInterval(timeinterval);
-        enableTimerButton = true;
-        $timerButton.html("Start timer ⏰");
+        socket.emit('enable timer button');
         stopBreakForEveryone();
       }
     },1000);
   };
+
+  const enableTimerButton = () => {
+    enableTimerButtonFlag = true;
+    $timerButton.html("Start timer ⏰");
+  }
 
   const startTimerForEveryone = (time) => {
     settingupTimer = false;
@@ -547,6 +551,11 @@ $(function() {
   socket.on('stop break timer', (data) => {
     console.log(`${data.username} has stopped the timer.`);
     startTimerForEveryone(studyTime);
+  });
+
+  socket.on('enable timer button', (data) => {
+    console.log(`timer button`);
+    enableTimerButton();
   });
 
   socket.on('disconnect', () => {
