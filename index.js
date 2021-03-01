@@ -114,6 +114,12 @@ io.on('connection', (socket) => {
     });
   });
 
+  socket.on('enable timer button', () => {
+    socket.broadcast.emit('enable timer button', {
+      username: socket.username
+    });
+  });
+
   // when the user disconnects.. perform this
   socket.on('disconnect', () => {
     if (addedUser) {
