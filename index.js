@@ -18,8 +18,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 let numUsers = 0;
 let time = 5.;
-let userReady = false;
-let userReadyCounter = 0;
 
 io.on('connection', (socket) => {
   let addedUser = false;
@@ -67,13 +65,10 @@ io.on('connection', (socket) => {
 
   // when the client emits 'user ready', we broadcast it to others
   socket.on('user ready', () => {
-    if(!userReady) {
-      userReady = true;
-      socket.broadcast.emit('user ready', {
-      username: socket.username
+    socket.broadcast.emit('user ready', {
+      username: socket.username,
+      numUsers: numUsers
     });
-    }
-    
   });
 
   // when the client emits 'start timer', we broadcast it to others
