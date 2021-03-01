@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <script type="text/javascript" src="./dist/browser-image-compression.js"
     defer="defer"></script>
-  <title>Socket.IO Chat Example</title>
+  <title>MyDeskmate</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -13,18 +13,19 @@
       <div class="chatArea">
         <ul class="messages"></ul>
       </div>
-      <button class="timerButton">Start timer</button>
+      <div class = "userInteraction">
+        <button class="timerButton">Start timer</button>
 
-      <!-- Upload file -->
-      <div style="display: flex;">
-        <label for="uploadfile">
-          <input type="file" id="uploadfile" />
-        </label>
-        <span id="progress">uploading: <span id="percentage"></span> %</span>
+        <!-- Upload file -->
+        <div style="display: flex;">
+          <label class="uploadFileLabel" for="uploadfile">
+            <input class="uploadFile" type="file" id="uploadfile" />
+          </label>
+          <span id="progress"><span id="percentage"></span></span>
+        </div>
+        <!-- Upload file -->
+        <input class="inputMessage" placeholder="Type here..."/>
       </div>
-      <!-- Upload file -->
-
-      <input class="inputMessage" placeholder="Type here..."/>
     </li>
     <li class="login page">
       <div class="form">
