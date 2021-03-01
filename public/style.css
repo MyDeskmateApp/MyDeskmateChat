@@ -195,12 +195,8 @@ ul {
 
 /* Font */
 
-.messages {
-  font-size: 300%;
-}
-
-.inputMessage {
-  font-size: 300%;
+.messages,.inputMessage {
+  font-size: 200%;
 }
 
 .log {

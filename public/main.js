@@ -99,7 +99,7 @@ $(function() {
 
   // Sends a prompt
   const sendPrompt = (botname, prompt) => {
-    let endtime = 1.;
+    let endtime = 0.7;
     var promtTnterval = setInterval(() => {
       const t = getTimeRemaining(endtime);
       endtime -= 1000;
@@ -391,7 +391,8 @@ $(function() {
       if(startBreakTime === 1) {
         sendPrompt("Your other deskmate", "start break time!!");
       } else if(startBreakTime > 1) {
-        sendPrompt("Your other deskmate", "Wheew let's share our final result 😜 feel free to post photos and celebrate!");
+        sendPrompt("Your other deskmate", "Wheew good work! Let's share our final result!");
+        sendPrompt("Your other deskmate", "Feel free to post photos and celebrate! 😜");
       }
     }
 
@@ -504,6 +505,7 @@ $(function() {
     numberOfReadyUsers++;
     if(!isUserReady) {
       sendPrompt("Your other deskmate", `${data.username} is waiting to studying with you! 😎 Click the start timer button and click 'I'm ready'.`);
+      sendPrompt("Your other deskmate", `Click the start timer button and click 'I'm ready'.`);
     }
     console.log(`${data.username} is ready.`);
     console.log(`${numberOfReadyUsers} out of ${numberOfUsers} users are ready.`);
