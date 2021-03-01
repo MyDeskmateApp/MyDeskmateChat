@@ -33,7 +33,7 @@ $(function() {
   let $currentInput = $usernameInput.focus();
 
   let timeinterval;
-  let startBreakTime = 0;
+  let startBreakTimeCounter = 0;
 
   let numberOfUsers;
   let numberOfReadyUsers = 0;
@@ -99,7 +99,7 @@ $(function() {
 
   // Sends a prompt
   const sendPrompt = (botname, prompt) => {
-    let endtime = 0.7;
+    let endtime = 0.5;
     var promtTnterval = setInterval(() => {
       const t = getTimeRemaining(endtime);
       endtime -= 1000;
@@ -382,15 +382,15 @@ $(function() {
     $timerPage.fadeOut();
 
     // flag for break time
-    startBreakTime++;
+    startBreakTimeCounter++;
 
-    if(startBreakTime === 1) {
-      startBreakTimeForEveryone();
+    if(startBreakTimeCounter === 1) {
+      startBreakTime();
     }
     if(isTimerPageOn) {
-      if(startBreakTime === 1) {
+      if(startBreakTimeCounter === 1) {
         sendPrompt("Your other deskmate", "start break time!!");
-      } else if(startBreakTime > 1) {
+      } else if(startBreakTimeCounter > 1) {
         sendPrompt("Your other deskmate", "Wheew good work! Let's share our final result!");
         sendPrompt("Your other deskmate", "Feel free to post photos and celebrate! 😜");
       }
@@ -440,6 +440,18 @@ $(function() {
     showTimerPageAndCountdown(time);
   };
 
+  // Start break time for this client and everyone else.
+  const startBreakTime = () => {
+    breakTimeCountdown(breakTime);
+    startBreakTimeForEveryone();
+  };
+
+  // Stop break time for this client and everyone else.
+  const stopBreakTime = () => {
+    startTimerForEveryone(studyTime);
+    socket.emit('stop break timer');
+  };
+
   const stopTimerForEveryone = () => { 
     settingupTimer = false;
     socket.emit('stop timer');
@@ -449,7 +461,7 @@ $(function() {
 
   const stopBreakForEveryone = () => { 
     console.log('triggering break time stop');
-    socket.emit('stop break timer');
+    stopBreakTime();
   };
 
   // Socket events
@@ -582,7 +594,6 @@ $(function() {
       console.log(error);
       await readThenSendFile(imageFile); // if filetype is not image then sent orignal data without compression
     }
-
   });
 
   function readThenSendFile(data) {
