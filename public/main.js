@@ -67,10 +67,12 @@ $(function() {
       $currentInput = $inputMessage.focus();
 
       if(username.startsWith('dev')) {
-        let customTime = Number(username.substring(3));
-        studyTime = customTime;
-        breakTime = customTime;
-        console.log(`set custom time ${customTime}`);
+        if(!isNaN(Number(username.substring(3)))) {
+          let customTime = Number(username.substring(3));
+          studyTime = customTime;
+          breakTime = customTime;
+          console.log(`set custom time ${customTime}`);
+        }
       }
 
       // Tell the server your username
@@ -305,6 +307,11 @@ $(function() {
         startTimerForEveryone(studyTime);
       }
       socket.emit('user ready');
+
+      // UI changes
+      $readyButton.html("waiting... 🔥");
+      $readyButton.css("background-color: grey;");
+      $setupTitle.html("Waiting for your partner to respond...");
     }
   };
 

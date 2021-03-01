@@ -14,15 +14,15 @@
         <ul class="messages"></ul>
       </div>
       <button class="timerButton">Start timer</button>
+
       <!-- Upload file -->
       <div style="display: flex;">
-        <label for="uploadfile"><span style="color: white;">Filetypes: mp4, mkv, ogg, mp3, wav, aac, all image format
-            including gifs</span>
-
+        <label for="uploadfile">
           <input type="file" id="uploadfile" />
         </label>
         <span id="progress">uploading: <span id="percentage"></span> %</span>
       </div>
+      <!-- Upload file -->
 
       <input class="inputMessage" placeholder="Type here..."/>
     </li>
@@ -52,13 +52,10 @@
 
   <!-- The Modal -->
   <div id="myModal" class="modal">
-
     <!-- The Close Button -->
-    <span class="close">&times;</span>
-
-    <!-- Modal Content (The Image) -->
+    <div class="close">&times;</div>
+    Modal Content (The Image)
     <img class="modal-content" id="img-content">
-
     <!-- Modal Caption (Image Text) -->
     <div id="caption"></div>
   </div>

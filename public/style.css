@@ -119,7 +119,7 @@ ul {
   margin: auto;
 }
 
-.setup.page > .setupArea > .setupTime:active,.setup.page > .setupArea > .setupTime:hover {
+.setup.page > .setupArea > .setupTime:hover {
   background-color: grey;
 }
 
@@ -207,8 +207,8 @@ ul {
 /* Messages */
 
 .chatArea {
-  height: 100%;
-  padding-bottom: 60px;
+  height: 90%;
+  /*padding-bottom: 100px;*/
 }
 
 .messages {
@@ -240,6 +240,12 @@ ul {
   padding-left: 20px;
   right: 0;
   width: 100%;
+
+  position: absolute;
 }
 
 /* Modal */
+
+.modal {
+  display: none;
+}
