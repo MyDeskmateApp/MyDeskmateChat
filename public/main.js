@@ -38,6 +38,7 @@ $(function() {
   let numberOfUsers;
   let numberOfReadyUsers = 0;
   let isUserReady = false;  // Whether the currect user is ready
+  let enableTimerButton = true;
 
   // Default for study session
   let studyTime = 40;
@@ -285,7 +286,9 @@ $(function() {
 
 
   $timerButton.on("click", () => {
-    showTimerSetupPage();
+      if (enableTimerButton == true) {
+        showTimerSetupPage();
+      }
   });
 
   $timerPage.click(() => {
@@ -381,18 +384,21 @@ $(function() {
   const breakTimeCountdown = (time) => {
     clearInterval(timeinterval);
     console.log("break time countdown" + time);
+    enableTimerButton = false;
 
     // Convert from min to ms
     let endtime = time*60.*1000.;
     timeinterval = setInterval(() => {
       const t = getTimeRemaining(endtime);
       endtime -= 1000;
-      $chatPage.append(("0" + t.hours).slice(-2)   + ":" + 
+      $timerButton.html(("0" + t.hours).slice(-2)   + ":" + 
                 ("0" + t.minutes).slice(-2) + ":" + 
                 ("0" + t.seconds).slice(-2));
 
       if (t.total <= 0) {
         clearInterval(timeinterval);
+        enableTimerButton = true;
+        $timerButton.html("Start timer ⏰");
         stopBreakForEveryone();
       }
     },1000);
