@@ -371,16 +371,16 @@ $(function() {
   const breakTimeCountdown = (time) => {
     clearInterval(timeinterval);
     console.log("break time countdown" + time);
-    $time.html("");
 
     // Convert from min to ms
     let endtime = time*60.*1000.;
     timeinterval = setInterval(() => {
       const t = getTimeRemaining(endtime);
       endtime -= 1000;
-      $time.html(("0" + t.hours).slice(-2)   + ":" + 
+      $chatPage.append(("0" + t.hours).slice(-2)   + ":" + 
                 ("0" + t.minutes).slice(-2) + ":" + 
                 ("0" + t.seconds).slice(-2));
+
       if (t.total <= 0) {
         clearInterval(timeinterval);
         stopBreakForEveryone();
