@@ -557,7 +557,7 @@ $(function() {
     reader.onprogress = function (currentFile) {
       if (currentFile.lengthComputable) {
         var progress = parseInt(((currentFile.loaded / currentFile.total) * 100), 10);
-        $('#percentage').html(progress);
+        // $('#percentage').html(progress);
         console.log(progress);
       }
     }

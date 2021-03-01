@@ -9,7 +9,7 @@ html {
   -webkit-font-smoothing: antialiased;
 }
 
-html, input {
+html, input, a {
   font-family:
     "HelveticaNeue-Light",
     "Helvetica Neue Light",
@@ -185,6 +185,11 @@ ul {
 
 .chat.page {
   display: none;
+
+  /*padding-bottom: 100px;*/
+  /*margin-top:100px;*/
+  /*margin-bottom: 100px;*/
+  /*z-index: -1;*/
 }
 
 /* Font */
@@ -207,8 +212,8 @@ ul {
 /* Messages */
 
 .chatArea {
-  height: 90%;
-  /*padding-bottom: 100px;*/
+  height: 80%;
+  margin-bottom: 100px;
 }
 
 .messages {
@@ -242,7 +247,87 @@ ul {
   width: 100%;
 
   position: absolute;
+
+  z-index: 1
 }
+
+/* Timer Button */
+
+/*.timerButton {
+  background-color: white;
+  border: none;
+  border-bottom: 2px solid black;
+  border-top: 2px solid black;
+  border-left: 2px solid black;
+  border-right: 2px solid black;
+
+  outline: none;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  text-align: center;
+  width: 100px;
+  margin: auto;
+  /*margin-bottom: 100px;*/
+/*  bottom: 100px;
+  position: absolute;
+}*/
+
+.timerButton {
+  background-color:#44c767;
+  border-radius:15px;
+  border:1px solid #18ab29;
+  display:inline-block;
+  cursor:pointer;
+  color:#ffffff;
+
+  font-size:23px;
+  padding:16px 31px;
+  text-decoration:none;
+  text-shadow:0px 1px 0px #2f6627;
+
+  left: 10px;
+  bottom: 175px;
+  position: absolute;
+}
+
+.timerButton:hover {
+  background-color:#5cbf2a;
+}
+
+.timerButton:active {
+  /*position:relative;*/
+  /*top:1px;*/
+}
+
+
+/* File Upload Button */
+
+.uploadFile {
+  background-color:#44c767;
+  border-radius:15px;
+  border:1px solid #18ab29;
+  display:inline-block;
+  cursor:pointer;
+  color:#ffffff;
+
+  font-size:23px;
+  padding:16px 31px;
+  text-decoration:none;
+  text-shadow:0px 1px 0px #2f6627;
+
+  left: 10px;
+  bottom: 104px;
+  position: absolute;
+}
+.uploadFile:hover {
+  background-color:#5cbf2a;
+}
+.uploadFile:active {
+  /*position:relative;*/
+  /*top:1px;*/
+}
+
+
 
 /* Modal */
 
