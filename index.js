@@ -120,14 +120,11 @@ io.on('connection', (socket) => {
   //serving files
   socket.on('base64 file', function (msg) {
     console.log('received base64 file from' + socket.username);
-    io.sockets.emit('base64 file',  //include sender
-
-      {
-        username: socket.username,
-        file: msg.file,
-        fileName: msg.fileName
-      }
-
+    io.sockets.emit('base64 file',  /*include sender*/ {
+      username: socket.username,
+      file: msg.file,
+      fileName: msg.fileName
+    }
     );
   });
 });
