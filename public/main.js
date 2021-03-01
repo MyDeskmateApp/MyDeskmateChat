@@ -39,6 +39,8 @@ $(function() {
   let numberOfReadyUsers = 0;
   let isUserReady = false;  // Whether the currect user is ready
 
+  let isTimerPageOn = false;
+
   // Default for study session
   let studyTime = 40;
   // Default for break session
@@ -94,6 +96,23 @@ $(function() {
     }
   }
 
+  // Sends a prompt
+  const sendPrompt = (botname, prompt) => {
+    let endtime = 1.;
+    var promtTnterval = setInterval(() => {
+      const t = getTimeRemaining(endtime);
+      endtime -= 1000;
+      if (t.total <= 0) {
+        clearInterval(promtTnterval);
+        let message = cleanInput(prompt);
+        // if there is a non-empty prompt and a socket connection
+        if (message && connected) {
+          addChatMessage({ username: botname , message: message });
+        }
+      }
+    },1000);
+  }
+
   // Log a message on the chat window
   const log = (message, options) => {
     const $el = $('<li>').addClass('log').text(message);
@@ -110,7 +129,6 @@ $(function() {
       if(options && typeof options.fade !== 'undefined') {
         options.fade = false;
       }
-      
       $typingMessages.remove();
     }
 
@@ -125,7 +143,6 @@ $(function() {
       .data('username', data.username)
       .addClass(typingClass)                      // Queried by getTypingMessages()
       .append($usernameDiv, $messageBodyDiv);
-
 
     addMessageElement($messageDiv, options);
   }
@@ -278,19 +295,13 @@ $(function() {
     $inputMessage.focus();
   });
 
-  // Focus input when clicking on the timer setup input's border
-  // $setupPage.click(() => {
-  //   $setupTime.focus();
-  // });
-
-
   $timerButton.on("click", () => {
     showTimerSetupPage();
   });
 
-  $timerPage.click(() => {
-    stopTimerForEveryone();
-  });
+  // $timerPage.click(() => {
+  //   stopTimerForEveryone();
+  // });
 
   $readyButton.click(() => {
     userReady();
@@ -342,6 +353,7 @@ $(function() {
     $setupPage.fadeOut();
     $time.html("");
     $timerPage.show();
+    isTimerPageOn = true;
     clearInterval(timeinterval);
 
     // Convert from min to ms
@@ -353,6 +365,7 @@ $(function() {
                 ("0" + t.minutes).slice(-2) + ":" + 
                 ("0" + t.seconds).slice(-2));
       if (t.total <= 0) {
+        $time.html("");
         clearInterval(timeinterval);
         stopTimerForEveryone();
       }
@@ -364,16 +377,29 @@ $(function() {
     $chatPage.show();
     $setupPage.fadeOut();
     $timerPage.fadeOut();
+
     // flag for break time
-    startBreakTime += 1;
-    startBreakTimeForEveryone();
+    startBreakTime++;
+
+    if(startBreakTime === 1) {
+      startBreakTimeForEveryone();
+    }
+    if(isTimerPageOn) {
+      if(startBreakTime === 1) {
+        sendPrompt("Your other deskmate", "start break time!!");
+      } else if(startBreakTime > 1) {
+        sendPrompt("Your other deskmate", "Wheew let's share our final result 😜 feel free to post photos and celebrate!");
+      }
+    }
+
+    isTimerPageOn = false;
   };
 
   // start break time for everyone
   const startBreakTimeForEveryone = () => {
     if (startBreakTime == 1) {
-        console.log("startBreakTimeForEveryone" + startBreakTime);
-        socket.emit('start break timer', breakTime);
+      console.log(`startBreakTimeForEveryone for ${breakTime}`);
+      socket.emit('start break timer', breakTime);
     }
   }
 
@@ -390,6 +416,7 @@ $(function() {
                 ("0" + t.minutes).slice(-2) + ":" + 
                 ("0" + t.seconds).slice(-2));
       if (t.total <= 0) {
+        $time.html("");
         clearInterval(timeinterval);
         stopBreakForEveryone();
       }
@@ -434,6 +461,12 @@ $(function() {
     addChatMessage(data);
   });
 
+   // Whenever the server emits 'new prompt', update the chat body
+  socket.on('new prompt', (data) => {
+    addChatMessage(data);
+  });
+
+
   // Whenever the server emits 'user joined', log it in the chat body
   socket.on('user joined', (data) => {
     log(`${data.username} joined`);
@@ -461,6 +494,9 @@ $(function() {
   // Whenever the server emits 'user ready', prompt this user to get ready
   socket.on('user ready', (data) => {
     numberOfReadyUsers++;
+    if(!isUserReady) {
+      sendPrompt("Your other deskmate", `${data.username} is waiting to studying with you! 😎 Click the start timer button and click 'I'm ready'.`);
+    }
     console.log(`${data.username} is ready.`);
     console.log(`${numberOfReadyUsers} out of ${numberOfUsers} users are ready.`);
   });

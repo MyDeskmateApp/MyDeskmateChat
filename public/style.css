@@ -99,13 +99,13 @@ ul {
   position: absolute;
 
   text-align: center;
-  top: 35%;
+  top: 33%;
   width: 100%;
 }
 
 .setup.page .setupArea .setupTime {
   background-color: transparent;
-  border: none;
+
   border-bottom: 2px solid #fff;
   border-top: 2px solid #fff;
   border-left: 2px solid #fff;
@@ -115,7 +115,8 @@ ul {
   padding-top: 15px;
   padding-bottom: 15px;
   text-align: center;
-  width: 50%;
+  width: 440px;
+
   margin: auto;
 }
 
@@ -128,7 +129,7 @@ ul {
 }
 
 .setup.page .setupProgression  {
-  font-size: 300%;
+  font-size: 230%;
 }
 
 .setup.page .setupTime {

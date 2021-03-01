@@ -31,6 +31,16 @@ io.on('connection', (socket) => {
     });
   });
 
+  // when the client emits 'new prompt', this listens and executes
+  socket.on('new prompt', (data) => {
+    // we tell the client to execute 'new prompt'
+    console.log(`received new prompt ${data.message} from ${data.username}.`);
+    socket.broadcast.emit('new prompt', {
+      username: data.username,
+      message: data.message
+    });
+  });
+
   // when the client emits 'add user', this listens and executes
   socket.on('add user', (username) => {
     if (addedUser) return;
