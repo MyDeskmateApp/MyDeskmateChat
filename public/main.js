@@ -12,7 +12,7 @@ $(function() {
   const $usernameInput = $('.usernameInput'); // Input for username
   const $messages = $('.messages');           // Messages area
   const $inputMessage = $('.inputMessage');   // Input message input box
-  // const $setupTime = $('.setupTime');         // Timer setup input box
+
   const $timerButton = $('.timerButton');     // Timer button
   const $time = $('.time');                   // Time
   const $setupTitle = $('.setupTitle');
@@ -401,7 +401,7 @@ $(function() {
 
   // start break time for everyone
   const startBreakTimeForEveryone = () => {
-    if (startBreakTime == 1) {
+    if (startBreakTimeCounter == 1) {
       console.log(`startBreakTimeForEveryone for ${breakTime}`);
       socket.emit('start break timer', breakTime);
     }
